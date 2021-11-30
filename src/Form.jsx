@@ -30,7 +30,7 @@ function Form() {
                         height={35}
                         data-color={color}
                         onClick={toggleManaSymbols}
-                        src={`/images/${color}.svg`}
+                        src={`/images/mana-symbols/${color}.svg`}
                     />
                 )
             }
