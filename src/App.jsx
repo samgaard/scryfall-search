@@ -1,11 +1,10 @@
-import './App.css'
+import React from "react";
+import Form from "./Form";
 
-function App() {
-  return (
-    <div>
-      Hello World
-    </div>
-  )
-}
-
-export default App
+export default function() {
+    return <>
+        <div className="container mt-5 center">
+            <Form/>
+        </div>
+    </>
+};
