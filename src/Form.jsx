@@ -37,22 +37,12 @@ function Form() {
         </>
     }
 
-    const SearchField = () => {
-        return <input
-            type="text"
-            value={searchString}
-            onChange={e => setSearchString(e.target.value)}
-            placeholder="Card Name"
-            className="form-control"
-            required
-        />
-    }
-
     const formSubmit = (e) => {
         e.preventDefault();
+        if (!searchString.length) return;
 
-        const url = 'https://api.scryfall.com/cards/search?';
-        const query = searchString.length ? 'q=' + searchString : '';
+        const url = 'https://api.scryfall.com/cards/search';
+        const query = '?q=' + searchString;
         const colors = manaSymbols.length ? ' c:' + manaSymbols.join(' c:') : '';
 
         axios
@@ -62,12 +52,12 @@ function Form() {
     }
 
     const cardImageSrc = card => {
-        let images = card.image_uris;
-        if (!images) {
+        let {image_uris} = card;
+        if (!image_uris) {
             // get first double sided card image
-            images = card.card_faces[0].image_uris;
+            image_uris = card.card_faces[0].image_uris;
         }
-        return images[cardArtType];
+        return image_uris[cardArtType];
     };
 
     const CardImage = ({card}) => {
@@ -86,7 +76,7 @@ function Form() {
                 Array.isArray(scryfallResults)
                 ? scryfallResults.map((r) =>
                     <div className="col-sm-3 mb-4 text-center" key={r.id}>
-                        <CardImage card={r} />
+                        <CardImage card={r}/>
                     </div>)
                 : <div className="col-sm-12 text-center">{scryfallResults}</div>
             }
@@ -96,14 +86,22 @@ function Form() {
     return <>
         <div className="mb-5">
             <form onSubmit={formSubmit}>
-                <div className="row">
+                <div className="row mb-2">
 
                     <div className="col-sm-3 offset-sm-1">
                         <ManaSymbols/>
                     </div>
 
                     <div className="col-sm-5">
-                        <SearchField/>
+                        <input
+                            name="text-search"
+                            type="text"
+                            value={searchString}
+                            onChange={e => setSearchString(e.target.value)}
+                            placeholder="Card Name"
+                            className="form-control"
+                            required
+                        />
                     </div>
 
                     <div className="col-sm-2">
@@ -115,7 +113,9 @@ function Form() {
                 </div>
 
                 <div className="row">
-                    <button className="btn btn-outline-secondary" type="submit" id="button-addon2">Search</button>
+                    <div className="col-sm-12">
+                        <button className="btn btn-outline-secondary float-end" type="submit">Search</button>
+                    </div>
                 </div>
 
             </form>
