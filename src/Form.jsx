@@ -4,7 +4,7 @@ import './custom.css';
 import { manaCostSymbols } from "./modules/symbols";
 
 function Form() {
-    const [searchString, setSearchString] = useState('');
+    const [searchCardName, setSearchCardName] = useState('');
     const [searchPower, setSearchPower] = useState(null);
     const [searchToughness, setSearchToughness] = useState(null);
     const [scryfallResults, setSearchResults] = useState([]);
@@ -44,10 +44,10 @@ function Form() {
 
     const formSubmit = e => {
         e.preventDefault();
-        if (!searchString.length) return;
+        if (!searchCardName.length) return;
 
         const url = 'https://api.scryfall.com/cards/search';
-        const query = '?q=' + searchString;
+        const query = '?q=' + searchCardName;
         const colors = manaSymbols.length ? ' c:' + manaSymbols.join(' c:') : '';
         const power = searchPower ? ' power:' + searchPower : '';
         const toughness = searchToughness ? ' toughness:' + searchToughness : '';
@@ -60,7 +60,7 @@ function Form() {
 
     const formReset = e => {
         e.preventDefault();
-        setSearchString('');
+        setSearchCardName('');
         setSearchResults([]);
         setSearchPower(null);
         setSearchToughness(null);
@@ -118,8 +118,8 @@ function Form() {
                     <div className="col-sm-12 col-md-5 mb-2">
                         <input
                             type="text"
-                            value={searchString}
-                            onChange={e => setSearchString(e.target.value)}
+                            value={searchCardName}
+                            onChange={e => setSearchCardName(e.target.value)}
                             placeholder="Card Name"
                             className="form-control"
                             required
