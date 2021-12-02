@@ -1,6 +1,7 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import './custom.css';
+import { manaCostSymbols } from "./modules/symbols";
 
 function Form() {
     const [searchString, setSearchString] = useState('');
@@ -9,7 +10,7 @@ function Form() {
     const [manaSymbols, setManaSymbols] = useState([]);
 
     const ManaSymbols = () => {
-        const toggleManaSymbols = function(e) {
+        const toggleManaSymbols = e => {
             const manaSymbol = e.target.getAttribute('data-color');
 
             setManaSymbols(
@@ -20,24 +21,26 @@ function Form() {
         };
 
         return <>
-            {['R', 'U', 'B', 'G', 'W']
-                .map(color =>
+            {manaCostSymbols
+                .map(m =>
                     <img
-                        key={color}
-                        alt={color}
-                        className={'mana-symbol opacity-' + (manaSymbols.indexOf(color) !== -1 ? '100' : '25')}
+                        key={m.key}
+                        alt={m.stringName}
+                        className={'mana-symbol opacity-' + (manaSymbols.indexOf(m.key) !== -1 ? '100' : '25')}
                         width={35}
                         height={35}
-                        data-color={color}
+                        data-color={m.key}
                         onClick={toggleManaSymbols}
-                        src={`/images/mana-symbols/${color}.svg`}
+                        onMouseOver={e => e.target.setAttribute('class', 'mana-symbol opacity-100')}
+                        onMouseOut={e => e.target.setAttribute('class', 'mana-symbol opacity-' + (manaSymbols.indexOf(m.key) !== -1 ? '100' : '25'))}
+                        src={m.uri}
                     />
                 )
             }
         </>
     }
 
-    const formSubmit = (e) => {
+    const formSubmit = e => {
         e.preventDefault();
         if (!searchString.length) return;
 
@@ -49,6 +52,12 @@ function Form() {
             .get(url + query + colors)
             .then(({data}) => setSearchResults(data.data))
             .catch(setSearchResults('No Results Found'))
+    }
+
+    const formReset = e => {
+        e.preventDefault();
+        setSearchString('');
+        setSearchResults([]);
     }
 
     const cardImageSrc = card => {
@@ -71,28 +80,35 @@ function Form() {
 
     const SearchResults = () => {
         if (!scryfallResults.length) return '';
-        return <div className={'row'}>
+        return <>
             {
-                Array.isArray(scryfallResults)
+                Array.isArray(scryfallResults) && scryfallResults.length > 0
                 ? scryfallResults.map((r) =>
-                    <div className="col-sm-3 mb-4 text-center" key={r.id}>
+                    <div className="col-sm-12 col-md-3 mb-4 text-center" key={r.id}>
                         <CardImage card={r}/>
                     </div>)
                 : <div className="col-sm-12 text-center">{scryfallResults}</div>
             }
-        </div>
+        </>
+    }
+
+    const CardStyleSelect = () => {
+        return <select className="form-select float-end" onChange={e => setCardArtType(e.target.value)}>
+            <option value="art_crop">Cropped</option>
+            <option value="small">Small</option>
+        </select>
     }
 
     return <>
-        <div className="mb-5">
-            <form onSubmit={formSubmit}>
-                <div className="row mb-2">
+        <div className="mb-5 card card-body bg-light">
+            <form onSubmit={formSubmit} onReset={formReset}>
+                <div className="row">
 
-                    <div className="col-sm-3 offset-sm-1">
+                    <div className="col-sm-12 col-md-3 offset-sm-1 mb-2">
                         <ManaSymbols/>
                     </div>
 
-                    <div className="col-sm-5">
+                    <div className="col-sm-12 col-md-5 mb-2">
                         <input
                             name="text-search"
                             type="text"
@@ -104,23 +120,36 @@ function Form() {
                         />
                     </div>
 
-                    <div className="col-sm-2">
-                        <select className="form-select" onChange={e => setCardArtType(e.target.value)}>
-                            <option value="art_crop">Cropped</option>
-                            <option value="small">Small</option>
-                        </select>
+                    <div className="col-sm-12 col-md-3 mb-2">
+
                     </div>
                 </div>
 
                 <div className="row">
+
                     <div className="col-sm-12">
-                        <button className="btn btn-outline-secondary float-end" type="submit">Search</button>
+                        <button className="btn btn-primary float-end" type="submit">Search</button>
+                        <button className="btn btn-outline-secondary float-end mx-1" type="reset">Reset</button>
                     </div>
+
                 </div>
 
             </form>
         </div>
-        <SearchResults results={scryfallResults} cardArtType={cardArtType}/>
+
+        {Array.isArray(scryfallResults) && scryfallResults.length > 0 &&
+        <>
+            <div className="row mb-2">
+                <div className="col-sm-12 offset-md-9 col-md-3 float-end">
+                    <CardStyleSelect/>
+                </div>
+            </div>
+            <div className="row">
+                <SearchResults/>
+            </div>
+        </>
+        }
+
     </>;
 }
 
