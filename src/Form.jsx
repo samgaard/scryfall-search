@@ -5,6 +5,8 @@ import { manaCostSymbols } from "./modules/symbols";
 
 function Form() {
     const [searchString, setSearchString] = useState('');
+    const [searchPower, setSearchPower] = useState(null);
+    const [searchToughness, setSearchToughness] = useState(null);
     const [scryfallResults, setSearchResults] = useState([]);
     const [cardArtType, setCardArtType] = useState('art_crop');
     const [manaSymbols, setManaSymbols] = useState([]);
@@ -47,9 +49,11 @@ function Form() {
         const url = 'https://api.scryfall.com/cards/search';
         const query = '?q=' + searchString;
         const colors = manaSymbols.length ? ' c:' + manaSymbols.join(' c:') : '';
+        const power = searchPower ? ' power:' + searchPower : '';
+        const toughness = searchToughness ? ' toughness:' + searchToughness : '';
 
         axios
-            .get(url + query + colors)
+            .get(url + query + colors + power + toughness)
             .then(({data}) => setSearchResults(data.data))
             .catch(setSearchResults('No Results Found'))
     }
@@ -58,6 +62,8 @@ function Form() {
         e.preventDefault();
         setSearchString('');
         setSearchResults([]);
+        setSearchPower(null);
+        setSearchToughness(null);
     }
 
     const cardImageSrc = card => {
@@ -110,7 +116,6 @@ function Form() {
 
                     <div className="col-sm-12 col-md-5 mb-2">
                         <input
-                            name="text-search"
                             type="text"
                             value={searchString}
                             onChange={e => setSearchString(e.target.value)}
@@ -121,7 +126,24 @@ function Form() {
                     </div>
 
                     <div className="col-sm-12 col-md-3 mb-2">
-
+                        <div className="input-group mb-2 mr-sm-2">
+                            <input
+                                type="number"
+                                value={searchPower}
+                                onChange={e => setSearchPower(e.target.value)}
+                                placeholder="Power"
+                                min={0}
+                                className="form-control mx-sm-1"
+                            />
+                            <input
+                                type="number"
+                                value={searchToughness}
+                                onChange={e => setSearchToughness(e.target.value)}
+                                placeholder="Toughness"
+                                min={0}
+                                className="form-control"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -137,19 +159,18 @@ function Form() {
             </form>
         </div>
 
-        {Array.isArray(scryfallResults) && scryfallResults.length > 0 &&
-        <>
+        {
+            Array.isArray(scryfallResults) && scryfallResults.length > 0 &&
             <div className="row mb-2">
                 <div className="col-sm-12 offset-md-9 col-md-3 float-end">
                     <CardStyleSelect/>
                 </div>
             </div>
-            <div className="row">
-                <SearchResults/>
-            </div>
-        </>
         }
 
+        <div className="row">
+            <SearchResults/>
+        </div>
     </>;
 }
 
