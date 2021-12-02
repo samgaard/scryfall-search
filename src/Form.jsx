@@ -64,6 +64,7 @@ function Form() {
         setSearchResults([]);
         setSearchPower(null);
         setSearchToughness(null);
+        setManaSymbols([])
     }
 
     const cardImageSrc = card => {
@@ -99,7 +100,7 @@ function Form() {
     }
 
     const CardStyleSelect = () => {
-        return <select className="form-select float-end" onChange={e => setCardArtType(e.target.value)}>
+        return <select className="form-select float-end" value={cardArtType} onChange={e => setCardArtType(e.target.value)}>
             <option value="art_crop">Cropped</option>
             <option value="small">Small</option>
         </select>
