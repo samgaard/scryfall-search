@@ -5,10 +5,10 @@ import { manaCostSymbols } from "./modules/symbols";
 
 function Form() {
     const [searchCardName, setSearchCardName] = useState('');
-    const [searchPower, setSearchPower] = useState(null);
-    const [searchToughness, setSearchToughness] = useState(null);
+    const [searchPower, setSearchPower] = useState('');
+    const [searchToughness, setSearchToughness] = useState('');
     const [scryfallResults, setSearchResults] = useState([]);
-    const [cardArtType, setCardArtType] = useState('art_crop');
+    const [cardArtType, setCardArtType] = useState('border_crop');
     const [manaSymbols, setManaSymbols] = useState([]);
 
     const ManaSymbols = () => {
@@ -62,8 +62,8 @@ function Form() {
         e.preventDefault();
         setSearchCardName('');
         setSearchResults([]);
-        setSearchPower(null);
-        setSearchToughness(null);
+        setSearchPower('');
+        setSearchToughness('');
         setManaSymbols([])
     }
 
@@ -101,8 +101,8 @@ function Form() {
 
     const CardStyleSelect = () => {
         return <select className="form-select float-end" value={cardArtType} onChange={e => setCardArtType(e.target.value)}>
-            <option value="art_crop">Cropped</option>
-            <option value="small">Small</option>
+            <option value="border_crop">Full Card</option>
+            <option value="art_crop">Card Art</option>
         </select>
     }
 
