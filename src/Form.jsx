@@ -66,6 +66,7 @@ function Form() {
         setSearchResults([]);
         setSearchPower('');
         setSearchToughness('');
+        setSearchManaValue('');
         setManaSymbols([])
     }
 
