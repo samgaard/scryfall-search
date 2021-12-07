@@ -7,6 +7,7 @@ function Form() {
     const [searchCardName, setSearchCardName] = useState('');
     const [searchPower, setSearchPower] = useState('');
     const [searchToughness, setSearchToughness] = useState('');
+    const [searchManaValue, setSearchManaValue] = useState('');
     const [scryfallResults, setSearchResults] = useState([]);
     const [cardArtType, setCardArtType] = useState('border_crop');
     const [manaSymbols, setManaSymbols] = useState([]);
@@ -51,9 +52,10 @@ function Form() {
         const colors = manaSymbols.length ? ' c:' + manaSymbols.join(' c:') : '';
         const power = searchPower ? ' power:' + searchPower : '';
         const toughness = searchToughness ? ' toughness:' + searchToughness : '';
+        const cmc = searchManaValue ? ' cmc=' + searchManaValue : '';
 
         axios
-            .get(url + query + colors + power + toughness)
+            .get(url + query + colors + power + toughness + cmc)
             .then(({data}) => setSearchResults(data.data))
             .catch(setSearchResults('No Results Found'))
     }
@@ -115,7 +117,7 @@ function Form() {
                         <ManaSymbols/>
                     </div>
 
-                    <div className="col-sm-12 col-md-5 mb-2">
+                    <div className="col-sm-12 col-md-4 mb-2">
                         <input
                             type="text"
                             value={searchCardName}
@@ -126,8 +128,16 @@ function Form() {
                         />
                     </div>
 
-                    <div className="col-sm-12 col-md-3 mb-2">
+                    <div className="col-sm-12 col-md-4 mb-2">
                         <div className="input-group mb-2 mr-sm-2">
+                            <input
+                                type="number"
+                                value={searchManaValue}
+                                onChange={e => setSearchManaValue(e.target.value)}
+                                placeholder="Mana Value"
+                                min={0}
+                                className="form-control mx-sm-1"
+                            />
                             <input
                                 type="number"
                                 value={searchPower}
