@@ -11,6 +11,7 @@ function Form() {
     const [scryfallResults, setSearchResults] = useState([]);
     const [cardArtType, setCardArtType] = useState('border_crop');
     const [manaSymbols, setManaSymbols] = useState([]);
+    const [hoveredManaSymbol, setHoveredManaSymbol] = useState('');
 
     const ManaSymbols = () => {
         const toggleManaSymbols = e => {
@@ -29,13 +30,13 @@ function Form() {
                     <img
                         key={m.key}
                         alt={m.stringName}
-                        className={'mana-symbol opacity-' + (manaSymbols.indexOf(m.key) !== -1 ? '100' : '25')}
+                        className={'mana-symbol opacity-' + (manaSymbols.indexOf(m.key) !== -1 || hoveredManaSymbol === m.key ? '100' : '25')}
                         width={35}
                         height={35}
                         data-color={m.key}
                         onClick={toggleManaSymbols}
-                        onMouseOver={e => e.target.setAttribute('class', 'mana-symbol opacity-100')}
-                        onMouseOut={e => e.target.setAttribute('class', 'mana-symbol opacity-' + (manaSymbols.indexOf(m.key) !== -1 ? '100' : '25'))}
+                        onMouseOver={e => setHoveredManaSymbol(m.key)}
+                        onMouseOut={e => setHoveredManaSymbol('')}
                         src={m.uri}
                     />
                 )
