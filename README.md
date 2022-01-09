@@ -2,7 +2,7 @@
 React UI for querying Scryfall api
 
 # install
-npm install
+`npm install`
 
 # launch
-npm run dev
+`npm run dev`
